@@ -57,3 +57,16 @@ exports.isObjectMatchesValuesExactly = testMatcher({
         {value: {name: "Bob", age: 24, hair: "none"}, description: "unexpected property: hair"}
     ]
 });
+
+exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatcher({
+    matcher: duck.hasProperties({
+        name: "Bob",
+        age: 24
+    }),
+    positives: [{name: "Bob", age: 24}, {name: "Bob", age: 24, hair: "none"}],
+    negatives: [
+        {value: {name: "Bob"}, description: "missing property: age"},
+        {value: {}, description: "missing property: age\nmissing property: name"},
+        {value: {name: "bob", age: 24}, description: "name was 'bob'"}
+    ]
+});
