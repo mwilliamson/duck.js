@@ -70,3 +70,13 @@ exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatche
         {value: {name: "bob", age: 24}, description: "name was 'bob'"}
     ]
 });
+
+exports.isArrayMatchesLengthAndIndividualElements = testMatcher({
+    matcher: duck.isArray(["apple", "banana"]),
+    positives: [["apple", "banana"]],
+    negatives: [
+        {value: [], description: "was of length 0"},
+        {value: ["apple", "banana", "coconut"], description: "was of length 3"},
+        {value: ["apple", "coconut",], description: "element at index 1 was 'coconut'"}
+    ]
+});

@@ -1,4 +1,5 @@
 var util = require("util");
+var _ = require("underscore");
 
 exports.is = function(value) {
     if (value instanceof Matcher) {
@@ -68,16 +69,30 @@ exports.hasProperties = function(object) {
                 }
             });
             
-            var mismatches = propertyResults.filter(function(result) {
-                return !result.matches;
-            });
-            if (mismatches.length === 0) {
-                return {matches: true};
+            return combineMatchResults(propertyResults);
+        }
+    });
+};
+
+exports.isArray = function(expectedArray) {
+    var elementMatchers = expectedArray.map(exports.is);
+    return new Matcher({
+        matchesWithDescription: function(value) {
+            if (value.length !== elementMatchers.length) {
+                return {matches: false, description: "was of length " + value.length};
             } else {
-                var mismatchDescriptions = mismatches.map(function(mismatch) {
-                    return mismatch.description;
+                var elementResults = _.zip(elementMatchers, value).map(function(values, index) {
+                    var expectedMatcher = values[0];
+                    var actual = values[1];
+                    if (expectedMatcher.matches(actual)) {
+                        return {matches: true};
+                    } else {
+                        var description = "element at index " + index + " " + expectedMatcher.describeMismatch(actual);
+                        return {matches: false, description: description};
+                    }
                 });
-                return {matches: false, description: mismatchDescriptions.join("\n")};
+                
+                return combineMatchResults(elementResults);
             }
         }
     });
@@ -109,6 +124,24 @@ Matcher.prototype.matchesWithDescription = function(value) {
         matches: isMatch,
         description: isMatch ? "" : this.describeMismatch(value)
     };
+};
+
+var combineMatchResults = function(results) {
+    var mismatches = results.filter(function(result) {
+        return !result.matches;
+    });
+    return combineMismatchs(mismatches);
+};
+
+var combineMismatchs = function(mismatches) {
+    if (mismatches.length === 0) {
+        return {matches: true};
+    } else {
+        var mismatchDescriptions = mismatches.map(function(mismatch) {
+            return mismatch.description;
+        });
+        return {matches: false, description: mismatchDescriptions.join("\n")};
+    }
 };
 
 var ownKeys = function(obj) {
