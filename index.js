@@ -100,8 +100,8 @@ exports.isArray = function(expectedArray) {
                     if (expectedMatcher.matches(actual)) {
                         return {matches: true};
                     } else {
-                        var description = "element at index " + index + " " + expectedMatcher.describeMismatch(actual)
-                            + " (expected " + expectedMatcher.describeSelf() + ")";
+                        var description = "element at index " + index + " didn't match:\n    " + expectedMatcher.describeMismatch(actual)
+                            + "\n    expected " + expectedMatcher.describeSelf();
                         return {matches: false, description: description};
                     }
                 });
