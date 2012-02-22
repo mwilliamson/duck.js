@@ -14,6 +14,7 @@ var testMatcher = function(options) {
         });
         negatives.forEach(function(negative) {
             test.same(false, matcher.matches(negative.value));
+            test.same(negative.description, matcher.describeValue(negative.value));
             var result = matcher.matchesWithDescription(negative.value);
             test.same(false, result.matches);
             test.same(negative.description, result.description);
@@ -27,8 +28,31 @@ exports.isMatchesValueUsingTripleEquals = testMatcher({
     matcher: duck.is(1),
     positives: [1],
     negatives: [
-        {value: 2, description: "got 2"},
-        {value: "1", description: "got '1'"},
-        {value: null, description: "got null"}
+        {value: 2, description: "was 2"},
+        {value: "1", description: "was '1'"},
+        {value: null, description: "was null"}
+    ]
+});
+
+exports.isDoesNothingToMatchers = testMatcher({
+    matcher: duck.is(duck.is(1)),
+    positives: [1],
+    negatives: [
+        {value: 2, description: "was 2"},
+        {value: "1", description: "was '1'"},
+        {value: null, description: "was null"}
+    ]
+});
+
+exports.isObjectMatchesValuesExactly = testMatcher({
+    matcher: duck.isObject({
+        name: "Bob",
+        age: 24
+    }),
+    positives: [{name: "Bob", age: 24}],
+    negatives: [
+        {value: {name: "Bob"}, description: "missing property: age"},
+        {value: {}, description: "missing property: age\nmissing property: name"},
+        {value: {name: "bob", age: 24}, description: "name was 'bob'"}
     ]
 });
