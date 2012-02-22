@@ -12,7 +12,7 @@ exports.is = function(value) {
 var equalTo = function(matchValue) {
     return new Matcher({
         matches: function(value) {
-            return value === matchValue;
+            return _.isEqual(value, matchValue);
         },
         describeMismatch: function(value) {
             return "was " + util.inspect(value);

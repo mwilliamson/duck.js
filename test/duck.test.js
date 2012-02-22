@@ -27,7 +27,7 @@ var testMatcher = function(options) {
     };
 };
 
-exports.isMatchesValueUsingTripleEquals = testMatcher({
+exports.isMatchesPrimitiveValues = testMatcher({
     matcher: duck.is(1),
     description: "1",
     positives: [1],
@@ -35,6 +35,15 @@ exports.isMatchesValueUsingTripleEquals = testMatcher({
         {value: 2, description: "was 2"},
         {value: "1", description: "was '1'"},
         {value: null, description: "was null"}
+    ]
+});
+
+exports.isMatchesObjectUsingIsEqual = testMatcher({
+    matcher: duck.is({}),
+    description: "{}",
+    positives: [{}],
+    negatives: [
+        {value: {hair: "none"}, description: "was { hair: 'none' }"}
     ]
 });
 
