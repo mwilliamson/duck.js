@@ -79,7 +79,7 @@ exports.hasProperties = function(object) {
                 } else if (!propertyMatcher.matches(value[key])) {
                     var description = "value of property \"" + key + "\" didn't match:\n" +
                         "    " + indent(propertyMatcher.describeMismatch(value[key]), 1) + "\n" +
-                        "    expected " + propertyMatcher.describeSelf();
+                        "    expected " + indent(propertyMatcher.describeSelf(), 1);
                     return {matches: false, description: description};
                 } else {
                     return {matches: true};
@@ -217,7 +217,7 @@ var formatProperties = function(obj) {
         return property.key;
     });
     return "\n    " + sortedProperties.map(function(property) {
-        return property.key + ": " + property.value;
+        return indent(property.key + ": " + property.value, 1);
     }).join(",\n    ");
 };
 

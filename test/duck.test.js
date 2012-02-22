@@ -73,6 +73,25 @@ exports.isObjectMatchesValuesExactly = testMatcher({
     ]
 });
 
+exports.isObjectSubDescriptionsAreIndented = testMatcher({
+    matcher: duck.isObject({artist: duck.isObject({name: "Bob"})}),
+    description: "{\n    artist: {\n        name: 'Bob'\n    }\n}",
+    positives: [],
+    negatives: [
+        {
+            value: {artist: {name: "Jim"}},
+            description:
+                "value of property \"artist\" didn't match:\n" + 
+                "    value of property \"name\" didn't match:\n" +
+                "        was 'Jim'\n" +
+                "        expected 'Bob'\n" +
+                "    expected {\n" +
+                "        name: 'Bob'\n" +
+                "    }"
+        }
+    ]
+});
+
 exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatcher({
     matcher: duck.hasProperties({
         name: "Bob",
