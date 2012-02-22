@@ -13,7 +13,7 @@ var equalTo = function(matchValue) {
         matches: function(value) {
             return value === matchValue;
         },
-        describeValue: function(value) {
+        describeMismatch: function(value) {
             return "was " + util.inspect(value);
         }
     });
@@ -37,7 +37,7 @@ exports.isObject = function(object) {
                 if (!objectHasOwnProperty(value, key)) {
                     return {matches: false, description: "missing property: " + key};
                 } else if (!propertyMatcher.matches(value[key])) {
-                    return {matches: false, description: key + " " + propertyMatcher.describeValue(value[key])};
+                    return {matches: false, description: key + " " + propertyMatcher.describeMismatch(value[key])};
                 } else {
                     return {matches: true};
                 }
@@ -76,11 +76,11 @@ Matcher.prototype.matches = function(value) {
     }
 };
 
-Matcher.prototype.describeValue = function(value) {
+Matcher.prototype.describeMismatch = function(value) {
     if (this._matcher.matchesWithDescription) {
         return this._matcher.matchesWithDescription(value).description;
     } else {
-        return this._matcher.describeValue(value);
+        return this._matcher.describeMismatch(value);
     }
 };
 
@@ -88,7 +88,7 @@ Matcher.prototype.matchesWithDescription = function(value) {
     var isMatch = this.matches(value);
     return {
         matches: isMatch,
-        description: isMatch ? "" : this.describeValue(value)
+        description: isMatch ? "" : this.describeMismatch(value)
     };
 };
 

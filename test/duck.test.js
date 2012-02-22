@@ -14,7 +14,7 @@ var testMatcher = function(options) {
         });
         negatives.forEach(function(negative) {
             test.same(false, matcher.matches(negative.value));
-            test.same(negative.description, matcher.describeValue(negative.value));
+            test.same(negative.description, matcher.describeMismatch(negative.value));
             var result = matcher.matchesWithDescription(negative.value);
             test.same(false, result.matches);
             test.same(negative.description, result.description);
