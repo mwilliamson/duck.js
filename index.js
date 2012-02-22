@@ -22,8 +22,8 @@ var equalTo = function(matchValue) {
 exports.isObject = function(object) {
     return new Matcher({
         matchesWithDescription: function(value) {
-            var keys = ownKeys(object);
-            keys.sort(function(first, second) {
+            var expectedKeys = ownKeys(object);
+            expectedKeys.sort(function(first, second) {
                 if (first < second) {
                     return -1;
                 } else if (first > second) {
@@ -32,7 +32,7 @@ exports.isObject = function(object) {
                     return 0;
                 }
             });
-            var propertyResults = keys.map(function(key) {
+            var propertyResults = expectedKeys.map(function(key) {
                 var propertyMatcher = exports.is(object[key]);
                 if (!objectHasOwnProperty(value, key)) {
                     return {matches: false, description: "missing property: " + key};
@@ -42,9 +42,16 @@ exports.isObject = function(object) {
                     return {matches: true};
                 }
             });
+            
+            var unexpectedPropertyMismatches = ownKeys(value).filter(function(key) {
+                return expectedKeys.indexOf(key) === -1
+            }).map(function(key) {
+                return {matches: false, description: "unexpected property: " + key};
+            });
+            
             var mismatches = propertyResults.filter(function(result) {
                 return !result.matches;
-            });
+            }).concat(unexpectedPropertyMismatches);
             if (mismatches.length === 0) {
                 return {matches: true};
             } else {

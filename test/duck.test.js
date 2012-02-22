@@ -53,6 +53,7 @@ exports.isObjectMatchesValuesExactly = testMatcher({
     negatives: [
         {value: {name: "Bob"}, description: "missing property: age"},
         {value: {}, description: "missing property: age\nmissing property: name"},
-        {value: {name: "bob", age: 24}, description: "name was 'bob'"}
+        {value: {name: "bob", age: 24}, description: "name was 'bob'"},
+        {value: {name: "Bob", age: 24, hair: "none"}, description: "unexpected property: hair"}
     ]
 });
