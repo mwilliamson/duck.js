@@ -42,15 +42,7 @@ exports.isObject = function(object) {
                 var mismatchDescriptions = mismatches.map(function(mismatch) {
                     return mismatch.description;
                 });
-                mismatchDescriptions.sort(function(first, second) {
-                    if (first < second) {
-                        return -1;
-                    } else if (first > second) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                });
+                mismatchDescriptions.sort();
                 return {matches: false, description: mismatchDescriptions.join("\n")};
             }
         }
