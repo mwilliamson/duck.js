@@ -233,3 +233,12 @@ var indent = function(str, indentationLevel) {
     }).join("");
     return str.replace(/\n/g, "\n" + indentation);
 };
+
+exports.any = new Matcher({
+    matchesWithDescription: function() {
+        return {matches: true};
+    },
+    describeSelf: function() {
+        return "<any>";
+    }
+});

@@ -116,3 +116,10 @@ exports.isArraySubDescriptionsAreIndented = testMatcher({
         }
     ]
 });
+
+exports.isArraySubDescriptionsAreIndented = testMatcher({
+    matcher: duck.any,
+    description: "<any>",
+    positives: [{name: "Bob"}, null, undefined, 0, 1, "Bob", []],
+    negatives: []
+});
