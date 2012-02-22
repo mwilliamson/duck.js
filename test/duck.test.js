@@ -3,8 +3,11 @@ var duck = require("../");
 var testMatcher = function(options) {
     return function(test) {
         var matcher = options.matcher;
+        var description = options.description;
         var positives = options.positives;
         var negatives = options.negatives;
+        
+        test.equal(matcher.describeSelf(), description);
         
         positives.forEach(function(positive) {
             test.same(true, matcher.matches(positive));
@@ -26,6 +29,7 @@ var testMatcher = function(options) {
 
 exports.isMatchesValueUsingTripleEquals = testMatcher({
     matcher: duck.is(1),
+    description: "1",
     positives: [1],
     negatives: [
         {value: 2, description: "was 2"},
@@ -36,6 +40,7 @@ exports.isMatchesValueUsingTripleEquals = testMatcher({
 
 exports.isDoesNothingToMatchers = testMatcher({
     matcher: duck.is(duck.is(1)),
+    description: "1",
     positives: [1],
     negatives: [
         {value: 2, description: "was 2"},
@@ -49,6 +54,7 @@ exports.isObjectMatchesValuesExactly = testMatcher({
         name: "Bob",
         age: 24
     }),
+    description: "{\n    age: 24,\n    name: 'Bob'}",
     positives: [{name: "Bob", age: 24}],
     negatives: [
         {value: {name: "Bob"}, description: "missing property: age"},
@@ -63,6 +69,7 @@ exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatche
         name: "Bob",
         age: 24
     }),
+    description: "object with properties {\n    age: 24,\n    name: 'Bob'}",
     positives: [{name: "Bob", age: 24}, {name: "Bob", age: 24, hair: "none"}],
     negatives: [
         {value: {name: "Bob"}, description: "missing property: age"},
@@ -73,10 +80,11 @@ exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatche
 
 exports.isArrayMatchesLengthAndIndividualElements = testMatcher({
     matcher: duck.isArray(["apple", "banana"]),
+    description: "['apple', 'banana']",
     positives: [["apple", "banana"]],
     negatives: [
         {value: [], description: "was of length 0"},
         {value: ["apple", "banana", "coconut"], description: "was of length 3"},
-        {value: ["apple", "coconut",], description: "element at index 1 was 'coconut'"}
+        {value: ["apple", "coconut",], description: "element at index 1 was 'coconut' (expected 'banana')"}
     ]
 });

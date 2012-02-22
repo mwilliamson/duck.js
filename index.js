@@ -16,15 +16,20 @@ var equalTo = function(matchValue) {
         },
         describeMismatch: function(value) {
             return "was " + util.inspect(value);
+        },
+        describeSelf: function() {
+            return util.inspect(matchValue);
         }
     });
 };
 
 exports.isObject = function(object) {
+    var matchers = valuesToMatchers(object);
+    
     return new Matcher({
         matchesWithDescription: function(value) {
             var expectedKeys = ownKeys(object);
-            var hasPropertiesResult = exports.hasProperties(object).matchesWithDescription(value);
+            var hasPropertiesResult = exports.hasProperties(matchers).matchesWithDescription(value);
             
             var unexpectedPropertyMismatches = ownKeys(value).filter(function(key) {
                 return expectedKeys.indexOf(key) === -1
@@ -41,11 +46,16 @@ exports.isObject = function(object) {
             } else {
                 return {matches: false, description: mismatchDescriptions.join("\n")};
             }
+        },
+        describeSelf: function() {
+            return formatObjectOfMatchers(matchers);
         }
     });
 };
 
 exports.hasProperties = function(object) {
+    var matchers = valuesToMatchers(object);
+    
     return new Matcher({
         matchesWithDescription: function(value) {
             var expectedKeys = ownKeys(object);
@@ -59,7 +69,7 @@ exports.hasProperties = function(object) {
                 }
             });
             var propertyResults = expectedKeys.map(function(key) {
-                var propertyMatcher = exports.is(object[key]);
+                var propertyMatcher = matchers[key];
                 if (!objectHasOwnProperty(value, key)) {
                     return {matches: false, description: "missing property: " + key};
                 } else if (!propertyMatcher.matches(value[key])) {
@@ -70,6 +80,9 @@ exports.hasProperties = function(object) {
             });
             
             return combineMatchResults(propertyResults);
+        },
+        describeSelf: function() {
+            return "object with properties " + formatObjectOfMatchers(matchers);
         }
     });
 };
@@ -87,13 +100,17 @@ exports.isArray = function(expectedArray) {
                     if (expectedMatcher.matches(actual)) {
                         return {matches: true};
                     } else {
-                        var description = "element at index " + index + " " + expectedMatcher.describeMismatch(actual);
+                        var description = "element at index " + index + " " + expectedMatcher.describeMismatch(actual)
+                            + " (expected " + expectedMatcher.describeSelf() + ")";
                         return {matches: false, description: description};
                     }
                 });
                 
                 return combineMatchResults(elementResults);
             }
+        },
+        describeSelf: function() {
+            return util.format("[%s]", _.invoke(elementMatchers, "describeSelf").join(", "));
         }
     });
 };
@@ -124,6 +141,10 @@ Matcher.prototype.matchesWithDescription = function(value) {
         matches: isMatch,
         description: isMatch ? "" : this.describeMismatch(value)
     };
+};
+
+Matcher.prototype.describeSelf = function() {
+    return this._matcher.describeSelf();
 };
 
 var combineMatchResults = function(results) {
@@ -157,3 +178,44 @@ var ownKeys = function(obj) {
 var objectHasOwnProperty = function(obj, key) {
     return Object.prototype.hasOwnProperty.call(obj, key);
 };
+
+var objectMap = function(obj, func) {
+    var matchers = {};
+    _.forEach(obj, function(value, key) {
+        if (_.has(obj, key)) {
+            matchers[key] = func(value, key);
+        }
+    });
+    return matchers;
+    
+};
+
+var valuesToMatchers = function(obj) {
+    return objectMap(obj, exports.is);
+};
+
+var formatObject = function(obj) {
+    if (_.size(obj) === 0) {
+        return "{}";
+    } else {
+        return util.format("{%s}", formatProperties(obj));
+    }
+};
+
+var formatProperties = function(obj) {
+    var properties = _.map(obj, function(value, key) {
+        return {key: key, value: value};
+    });
+    var sortedProperties = _.sortBy(properties, function(property) {
+        return property.key;
+    });
+    return "\n    " + sortedProperties.map(function(property) {
+        return property.key + ": " + property.value;
+    }).join(",\n    ");
+};
+
+var formatObjectOfMatchers = function(matchers) {
+    return formatObject(objectMap(matchers, function(matcher) {
+        return matcher.describeSelf();
+    }));
+}
