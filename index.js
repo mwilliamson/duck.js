@@ -198,7 +198,7 @@ var formatObject = function(obj) {
     if (_.size(obj) === 0) {
         return "{}";
     } else {
-        return util.format("{%s}", formatProperties(obj));
+        return util.format("{%s\n}", formatProperties(obj));
     }
 };
 

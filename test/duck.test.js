@@ -54,7 +54,7 @@ exports.isObjectMatchesValuesExactly = testMatcher({
         name: "Bob",
         age: 24
     }),
-    description: "{\n    age: 24,\n    name: 'Bob'}",
+    description: "{\n    age: 24,\n    name: 'Bob'\n}",
     positives: [{name: "Bob", age: 24}],
     negatives: [
         {value: {name: "Bob"}, description: "missing property: age"},
@@ -69,7 +69,7 @@ exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatche
         name: "Bob",
         age: 24
     }),
-    description: "object with properties {\n    age: 24,\n    name: 'Bob'}",
+    description: "object with properties {\n    age: 24,\n    name: 'Bob'\n}",
     positives: [{name: "Bob", age: 24}, {name: "Bob", age: 24, hair: "none"}],
     negatives: [
         {value: {name: "Bob"}, description: "missing property: age"},
