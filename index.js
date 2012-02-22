@@ -1,6 +1,10 @@
 var util = require("util");
 var _ = require("underscore");
 
+var inspect = function(value) {
+    return util.inspect(value, false, null);
+};
+
 exports.is = function(value) {
     if (value instanceof Matcher) {
         return value;
@@ -15,10 +19,10 @@ var equalTo = function(matchValue) {
             return _.isEqual(value, matchValue);
         },
         describeMismatch: function(value) {
-            return "was " + util.inspect(value);
+            return "was " + inspect(value);
         },
         describeSelf: function() {
-            return util.inspect(matchValue);
+            return inspect(matchValue);
         }
     });
 };
