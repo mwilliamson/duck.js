@@ -66,10 +66,10 @@ exports.isObjectMatchesValuesExactly = testMatcher({
     description: "{\n    age: 24,\n    name: 'Bob'\n}",
     positives: [{name: "Bob", age: 24}],
     negatives: [
-        {value: {name: "Bob"}, description: "missing property: age"},
-        {value: {}, description: "missing property: age\nmissing property: name"},
-        {value: {name: "bob", age: 24}, description: "name was 'bob'"},
-        {value: {name: "Bob", age: 24, hair: "none"}, description: "unexpected property: hair"}
+        {value: {name: "Bob"}, description: "missing property: \"age\""},
+        {value: {}, description: "missing property: \"age\"\nmissing property: \"name\""},
+        {value: {name: "bob", age: 24}, description: "value of property \"name\" didn't match:\n    was 'bob'\n    expected 'Bob'"},
+        {value: {name: "Bob", age: 24, hair: "none"}, description: "unexpected property: \"hair\""}
     ]
 });
 
@@ -81,9 +81,9 @@ exports.hasPropertiesBehavesAsIsObjectExceptIgnoresUnexpectedValues = testMatche
     description: "object with properties {\n    age: 24,\n    name: 'Bob'\n}",
     positives: [{name: "Bob", age: 24}, {name: "Bob", age: 24, hair: "none"}],
     negatives: [
-        {value: {name: "Bob"}, description: "missing property: age"},
-        {value: {}, description: "missing property: age\nmissing property: name"},
-        {value: {name: "bob", age: 24}, description: "name was 'bob'"}
+        {value: {name: "Bob"}, description: "missing property: \"age\""},
+        {value: {}, description: "missing property: \"age\"\nmissing property: \"name\""},
+        {value: {name: "bob", age: 24}, description: "value of property \"name\" didn't match:\n    was 'bob'\n    expected 'Bob'"}
     ]
 });
 
@@ -107,7 +107,9 @@ exports.isArraySubDescriptionsAreIndented = testMatcher({
             value: [{name: "Jim"}],
             description:
                 "element at index 0 didn't match:\n" + 
-                "    name was 'Jim'\n" +
+                "    value of property \"name\" didn't match:\n" +
+                "        was 'Jim'\n" +
+                "        expected 'Bob'\n" +
                 "    expected {\n" +
                 "        name: 'Bob'\n" +
                 "    }"

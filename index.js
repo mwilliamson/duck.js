@@ -34,7 +34,7 @@ exports.isObject = function(object) {
             var unexpectedPropertyMismatches = ownKeys(value).filter(function(key) {
                 return expectedKeys.indexOf(key) === -1
             }).map(function(key) {
-                return "unexpected property: " + key;
+                return "unexpected property: \"" + key + "\"";
             });
             
             var mismatchDescriptions = 
@@ -71,9 +71,12 @@ exports.hasProperties = function(object) {
             var propertyResults = expectedKeys.map(function(key) {
                 var propertyMatcher = matchers[key];
                 if (!objectHasOwnProperty(value, key)) {
-                    return {matches: false, description: "missing property: " + key};
+                    return {matches: false, description: util.format("missing property: \"%s\"", key)};
                 } else if (!propertyMatcher.matches(value[key])) {
-                    return {matches: false, description: key + " " + propertyMatcher.describeMismatch(value[key])};
+                    var description = "value of property \"" + key + "\" didn't match:\n" +
+                        "    " + indent(propertyMatcher.describeMismatch(value[key]), 1) + "\n" +
+                        "    expected " + propertyMatcher.describeSelf();
+                    return {matches: false, description: description};
                 } else {
                     return {matches: true};
                 }
