@@ -100,8 +100,8 @@ exports.isArray = function(expectedArray) {
                     if (expectedMatcher.matches(actual)) {
                         return {matches: true};
                     } else {
-                        var description = "element at index " + index + " didn't match:\n    " + expectedMatcher.describeMismatch(actual)
-                            + "\n    expected " + expectedMatcher.describeSelf();
+                        var description = "element at index " + index + " didn't match:\n    " + indent(expectedMatcher.describeMismatch(actual), 1)
+                            + "\n    expected " + indent(expectedMatcher.describeSelf(), 1);
                         return {matches: false, description: description};
                     }
                 });
@@ -218,4 +218,11 @@ var formatObjectOfMatchers = function(matchers) {
     return formatObject(objectMap(matchers, function(matcher) {
         return matcher.describeSelf();
     }));
-}
+};
+
+var indent = function(str, indentationLevel) {
+    var indentation = _.range(indentationLevel).map(function() {
+        return "    ";
+    }).join("");
+    return str.replace(/\n/g, "\n" + indentation);
+};

@@ -88,3 +88,20 @@ exports.isArrayMatchesLengthAndIndividualElements = testMatcher({
         {value: ["apple", "coconut",], description: "element at index 1 didn't match:\n    was 'coconut'\n    expected 'banana'"}
     ]
 });
+
+exports.isArraySubDescriptionsAreIndented = testMatcher({
+    matcher: duck.isArray([duck.isObject({name: "Bob"})]),
+    description: "[{\n    name: 'Bob'\n}]",
+    positives: [[{name: "Bob"}]],
+    negatives: [
+        {
+            value: [{name: "Jim"}],
+            description:
+                "element at index 0 didn't match:\n" + 
+                "    name was 'Jim'\n" +
+                "    expected {\n" +
+                "        name: 'Bob'\n" +
+                "    }"
+        }
+    ]
+});
