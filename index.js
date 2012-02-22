@@ -23,6 +23,15 @@ exports.isObject = function(object) {
     return new Matcher({
         matchesWithDescription: function(value) {
             var keys = ownKeys(object);
+            keys.sort(function(first, second) {
+                if (first < second) {
+                    return -1;
+                } else if (first > second) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
             var propertyResults = keys.map(function(key) {
                 var propertyMatcher = exports.is(object[key]);
                 if (!objectHasOwnProperty(value, key)) {
@@ -42,7 +51,6 @@ exports.isObject = function(object) {
                 var mismatchDescriptions = mismatches.map(function(mismatch) {
                     return mismatch.description;
                 });
-                mismatchDescriptions.sort();
                 return {matches: false, description: mismatchDescriptions.join("\n")};
             }
         }
