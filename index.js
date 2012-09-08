@@ -6,7 +6,7 @@ var inspect = function(value) {
 };
 
 exports.is = function(value) {
-    if (value instanceof Matcher) {
+    if (value && value._isDuckMatcher) {
         return value;
     } else {
         return equalTo(value);
@@ -124,6 +124,7 @@ exports.isArray = function(expectedArray) {
 
 var Matcher = function(matcher) {
     this._matcher = matcher;
+    this._isDuckMatcher = true;
 };
 
 Matcher.prototype.matches = function(value) {
