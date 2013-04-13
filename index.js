@@ -23,7 +23,7 @@ exports.is = function(value) {
     }
 };
 
-var equalTo = function(matchValue) {
+var equalTo = exports.equalTo = function(matchValue) {
     return new Matcher({
         matches: function(value) {
             return _.isEqual(value, matchValue);
