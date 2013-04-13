@@ -181,4 +181,4 @@ Generate a string describing the matcher.
 
 ## Thanks
 
-Thanks to [http://hamcrest.org/](Hamcrest) for inspiration.
+Thanks to [Hamcrest](http://hamcrest.org/) for inspiration.
