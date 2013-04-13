@@ -1,6 +1,6 @@
 {
     "name": "duck",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "author": "Michael Williamson <mike@zwobble.org>",
     "description": "Rich matchers inspired by Hamcrest. Useful for generating helpful assertion failure messages in tests.",
     "license": "BSD",
