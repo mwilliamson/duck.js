@@ -53,16 +53,16 @@ AssertionError describing the mismatch.
 
 Each matcher has the following methods:
 
-### matcher.matches(value)
+#### matcher.matches(value)
 
 Return `true` if `value` satifies this matcher, false otherwise.
 
-### matcher.describeMismatch(value)
+#### matcher.describeMismatch(value)
 
 Generate a string describing why `value` doesn't satisfy this matcher.
 Behaviour is undefined if `value` actually satisifies the matcher.
 
-### matcher.matchesWithDescription(value)
+#### matcher.matchesWithDescription(value)
 
 Equivalent to:
 
@@ -76,7 +76,7 @@ return {
 
 Useful if you're likely to want both the boolean and the mismatch description.
 
-### matcher.describeSelf()
+#### matcher.describeSelf()
 
 Generate a string describing the matcher.
 
