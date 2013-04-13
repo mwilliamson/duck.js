@@ -138,27 +138,39 @@ var Matcher = function(matcher) {
 };
 
 Matcher.prototype.matches = function(value) {
-    if (this._matcher.matchesWithDescription) {
-        return this._matcher.matchesWithDescription(value).matches;
-    } else {
+    if (this._matcher.matches) {
         return this._matcher.matches(value);
+    } else {
+        return this._matcher.matchesWithDescription(value).matches;
     }
 };
 
 Matcher.prototype.describeMismatch = function(value) {
-    if (this._matcher.matchesWithDescription) {
-        return this._matcher.matchesWithDescription(value).description;
-    } else {
+    if (this._matcher.describeMismatch) {
         return this._matcher.describeMismatch(value);
+    } else {
+        return this._matcher.matchesWithDescription(value).description;
     }
 };
 
 Matcher.prototype.matchesWithDescription = function(value) {
-    var isMatch = this.matches(value);
-    return {
-        matches: isMatch,
-        description: isMatch ? "" : this.describeMismatch(value)
-    };
+    if (this._matcher.matchesWithDescription) {
+        var result = this._matcher.matchesWithDescription(value);
+        if (result.matches) {
+            return {
+                matches: true,
+                description: ""
+            };
+        } else {
+            return result;
+        }
+    } else {
+        var isMatch = this.matches(value);
+        return {
+            matches: isMatch,
+            description: isMatch ? "" : this.describeMismatch(value)
+        };
+    }
 };
 
 Matcher.prototype.describeSelf = function() {
