@@ -18,7 +18,8 @@ duck.assertThat(users, isArray([
 
 which might produce an error message like:
 
-```Expected [object with properties {
+```
+Expected [object with properties {
     name: 'Bob'
 }, object with properties {
     name: 'Jim'
@@ -36,7 +37,8 @@ element at index 1 didn't match:
         expected 'Jim'
     expected object with properties {
         name: 'Jim'
-    }```
+    }
+```
 
 ## API
 
