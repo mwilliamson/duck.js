@@ -1,8 +1,18 @@
 var util = require("util");
+var assert = require("assert");
+
 var _ = require("underscore");
+
 
 var inspect = function(value) {
     return util.inspect(value, false, null);
+};
+
+exports.assertThat = function(value, matcher) {
+    var result = matcher.matchesWithDescription(value);
+    var message = "Expected " + matcher.describeSelf() +
+        "\nbut " + result.description;
+    assert.ok(result.matches, message);
 };
 
 exports.is = function(value) {

@@ -142,3 +142,19 @@ exports.isArraySubDescriptionsAreIndented = testMatcher({
     positives: [{name: "Bob"}, null, undefined, 0, 1, "Bob", []],
     negatives: []
 });
+
+exports.assertReturnsNormallyOnSuccess = function(test) {
+    duck.assertThat(42, duck.is(42));
+    test.done();
+};
+
+exports.assertRaisesErrorIfAssertionFails = function(test) {
+    try {
+        duck.assertThat(42, duck.is(43));
+        test.fail("Should throw error");
+    } catch (error) {
+        test.equal(error.name, "AssertionError");
+        test.equal(error.message, "Expected 43\nbut was 42");
+    }
+    test.done();
+};
