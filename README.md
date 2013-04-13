@@ -37,3 +37,47 @@ element at index 1 didn't match:
     expected object with properties {
         name: 'Jim'
     }```
+
+## API
+
+### duck.assertThat(value, matcher)
+
+Assert that `value` satifies `matcher`.
+
+If `value` satifies `matcher`, return normally, otherwise throw an
+AssertionError describing the mismatch.
+
+### Matcher
+
+Each matcher has the following methods:
+
+### matcher.matches(value)
+
+Return `true` if `value` satifies this matcher, false otherwise.
+
+### matcher.describeMismatch(value)
+
+Generate a string describing why `value` doesn't satisfy this matcher.
+Behaviour is undefined if `value` actually satisifies the matcher.
+
+### matcher.matchesWithDescription(value)
+
+Equivalent to:
+
+```javascript
+var isMatch = this.matches(value);
+return {
+    matches: isMatch,
+    description: isMatch ? "" : this.describeMismatch(value)
+};
+```
+
+Useful if you're likely to want both the boolean and the mismatch description.
+
+### matcher.describeSelf()
+
+Generate a string describing the matcher.
+
+## Thanks
+
+Thanks to [http://hamcrest.org/](Hamcrest) for inspiration.
