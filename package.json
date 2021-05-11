@@ -8,9 +8,14 @@
         "type": "git",
         "url": "https://github.com/mwilliamson/duck.js.git"
     },
-    "keywords": ["test", "assert", "matcher", "assertThat"],
+    "keywords": [
+        "test",
+        "assert",
+        "matcher",
+        "assertThat"
+    ],
     "dependencies": {
-        "underscore": "~1.4.4"
+        "underscore": "^1.13.1"
     },
     "devDependencies": {
         "nodeunit": "~0.8.0"
